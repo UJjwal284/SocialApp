@@ -10,28 +10,31 @@ class SponsorCard extends Component {
         }
     }
 
-    componentDidMount() {
-        db.ref('/users/' + this.props.currentUserId + '/Chats/' + this.props.id).on('value', (snapshot) => {
-                let timeStamps = snapshot.val();
-                let newState = [];
-                for (let time in timeStamps) {
-                    newState.push({
-                        by: timeStamps[time].By,
-                        message: timeStamps[time].Message
+    async componentDidMount() {
+        try {
+            db.ref('/users/' + sessionStorage.getItem('currentUserId') + '/Chats/' + this.props.id).on('value', (snapshot) => {
+                    let timeStamps = snapshot.val();
+                    let newState = [];
+                    for (let time in timeStamps) {
+                        newState.push({
+                            by: timeStamps[time].By,
+                            message: timeStamps[time].Message
+                        })
+                    }
+                    this.setState({
+                        messages: newState,
                     })
                 }
-                this.setState({
-                    messages: newState,
-                })
-            }
-        )
+            )
+        } catch (error) {
+        }
     }
 
     render() {
         return (
-            <div>
+            <div id={'box'}>
                 {this.state.messages.map(mess =>
-                    <p>{mess.message}</p>
+                    <p className={mess.by === sessionStorage.getItem('currentUserId') ? 'c1' : 'c2'}>{mess.message}</p>
                 )}
             </div>
         );

@@ -1,3 +1,17 @@
 .chatBox {
     width: 100%;
 }
+
+.c1 {
+    width: fit-content;
+    margin-left: auto;
+}
+
+.c2 {
+    width: fit-content;
+}
+
+/*#box{*/
+/*    height: 500px;*/
+/*    overflow-y: auto;*/
+/*}*/

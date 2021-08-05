@@ -1,17 +1,31 @@
 import React, {useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {db} from "../Firebase";
+import {useHistory} from "react-router-dom";
 
 function Login() {
+    const history = useHistory();
     const [id, setId] = useState("");
     const [pass, setPass] = useState("");
 
     const handleLogin = (event) => {
         event.preventDefault()
-        db.ref('/users/' + id).set({
-            Password: pass
-        }).then(r => {
-
+        db.ref('users/' + id).once("value", snapshot => {
+            if (snapshot.exists()) {
+                if (snapshot.child('Password').val() === pass) {
+                    sessionStorage.setItem('currentUserId', id)
+                    history.push('/home')
+                } else {
+                    alert('Wrong credentials')
+                }
+            } else {
+                db.ref('/users/' + id).set({
+                    Password: pass
+                }).then(r => {
+                    sessionStorage.setItem('currentUserId', id)
+                    history.push('/home')
+                })
+            }
         })
     }
 
